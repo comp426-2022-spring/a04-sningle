@@ -21,7 +21,7 @@ const Database = require('better-sqlite3/lib/database')
 const { append } = require('express/lib/response')
 const db = new Database('log.db')
 
-const help = (`
+const helpMSG= (`
 server.js [options]
 
 --port	Set the port number for the server to listen on. Must be an integer
@@ -39,7 +39,7 @@ server.js [options]
 `)
 // If --help or -h, echo help text to STDOUT and exit
 if (args.help || args.h) {
-    console.log(help)
+    console.log(helpMSG)
     process.exit(0)
 }
 
