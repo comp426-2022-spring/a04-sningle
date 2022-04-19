@@ -65,11 +65,11 @@ if (log == true) {
     console.log("No log written.")
 }
 
-if (debug === true) {
+if (args.debug === true) {
     app.get('/app/log/access', (req, res) => {
-        res.statusCode = 200;
-        res.writeHead(res.statusCode, {"Content-Type" : "text/json"});
         const stmt = db.prepare('SELECT * FROM accesslog').all();
+        res.status(200).json(stmt)
+        //res.writeHead(res.statusCode, {"Content-Type" : "text/json"});
     })
 
     app.get('/app/error', (req, res) => {
@@ -81,14 +81,14 @@ if (debug === true) {
 app.get('/app/', (req, res) => {
     res.statusCode = 200;
     res.statusMessage = "OK";
-    res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
+    //res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
     res.end(res.statusCode + " " + res.statusMessage)
 })
 
 app.get('/app/flip/', (req, res) => {
     res.statusCode = 200;
     res.send('{"flip":"' + coinFlip() + '"}');
-    res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
+    //res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
 })
 
 app.get('/app/flips/:number', (req, res) => {
@@ -96,27 +96,26 @@ app.get('/app/flips/:number', (req, res) => {
     const flip_array = coinFlips(req.params.number);
     const sum = countFlips(flip_array)
     res.send('{"raw":\n[' + flip_array + '],"summary":{tails":' + sum.get("tails") + ',"heads":' + sum.get("heads") + '}}')
-    res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
+    //res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
 })
 
 app.get('/app/flip/call/heads', (req, res) => {
     res.statusCode = 200;
     const map = flipACoin("heads");
     res.send('{"call":"' + map.get("call") + '","flip":"' + map.get("flip") + '","result":"' + map.get("result") + " }")
-    res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
+    //res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
 })
 
 app.get('/app/flip/call/tails', (req, res) => {
     res.statusCode = 200;
     const map = flipACoin("tails");
     res.send('{"call":"' + map.get("call") + '","flip":"' + map.get("flip") + '","result":"' + map.get("result") + " }")
-    res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
+    //res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
 })
 
 app.use(function(req, res){
     res.statusCode = 404;
     res.status(404).send("404 NOT FOUND")
-    res.writeHead(res.statusCode, {"Content-Type" : "text/plain"});
 });
 
 const server = app.listen(port, () => {
