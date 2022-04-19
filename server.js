@@ -1,6 +1,7 @@
 // import {coinFlip, coinFlips, countFlips, flipACoin} from "./coin.mjs"
-const minimist = require('minimist')
+const args = require('minimist')(process.argv.slice(2))
 args["port", "debug", "log", "help"]
+console.log(args)
 
 const port = args.port || 5000
 const debug = args.debug || false
@@ -68,7 +69,7 @@ if (debug == true) {
     app.get('/app/log/access', (req, res) => {
         res.statusCode = 200;
         res.writeHead(res.statusCode, {"Content-Type" : "text/json"});
-        const stmt = db.prepare('SELECT * FROM accesslog').all();
+        const stmt = db.prepare('SELECT * FROM access').all();
     })
 
     app.get('/app/error', (req, res) => {
@@ -78,7 +79,7 @@ if (debug == true) {
 
 if (log == true) {
     const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
-    app.use(morgan('combined', {steam: accessLog}))
+    app.use(morgan('combined', {steam: access}))
 } else {
     console.log("No log written.")
 }
