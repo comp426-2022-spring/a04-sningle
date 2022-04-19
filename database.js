@@ -1,3 +1,5 @@
+"use strict";
+
 const database = require('better-sqlite3')
 const Database = require('better-sqlite3/lib/database')
 const { append } = require('express/lib/response')
