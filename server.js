@@ -64,8 +64,14 @@ app.use((req, res, next) => {
         next()
     })
 
+if (log == true) {
+    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
+    app.use(morgan('combined', {stream: access}))
+} else {
+    console.log("No log written.")
+}
 
-if (debug == true) {
+if (debug === true) {
     app.get('/app/log/access', (req, res) => {
         res.statusCode = 200;
         res.writeHead(res.statusCode, {"Content-Type" : "text/json"});
@@ -75,13 +81,6 @@ if (debug == true) {
     app.get('/app/error', (req, res) => {
         throw new Error('Error test successful.')
     })
-}
-
-if (log == true) {
-    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
-    app.use(morgan('combined', {steam: access}))
-} else {
-    console.log("No log written.")
 }
 
 
