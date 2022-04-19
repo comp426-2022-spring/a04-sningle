@@ -20,6 +20,7 @@ if (row === undefined) {
             url VARCHAR, 
             protocol TEXT,
             httpversion NUMERIC, 
+            secure VARCHAR,
             status INTEGER, 
             referer VARCHAR, 
             useragent VARCHAR )
