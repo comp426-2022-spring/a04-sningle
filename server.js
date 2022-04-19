@@ -15,12 +15,7 @@ const app = express()
 const morgan = require('morgan')
 const errorhandler = require('errorhandler')
 const fs = require('fs')
-
-
-const database = require('better-sqlite3')
-const Database = require('better-sqlite3/lib/database')
-const { append } = require('express/lib/response')
-const db = new Database('log.db')
+const db = require('./database.js')
 
 const helpMSG= (`
 server.js [options]
@@ -59,14 +54,14 @@ app.use((req, res, next) => {
             useragent: req.headers['user-agent']
         }
         console.log(logData)
-        const stmt = db.prepare('INSERT INTO access (remoteaddr, remoteuser, time, method, url, protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+        const stmt = db.prepare('INSERT INTO accesslog (remoteaddr, remoteuser, time, method, url, protocol, httpversion, secure, status, referer, useragent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
         const info = stmt.run(logData.remoteaddr, logData.remoteuser, logData.time, logData.method, logData.url, logData.protocol, logData.httpversion, logData.secure, logData.status, logData.referer, logData.useragent)
         next()
     })
 
 if (log == true) {
-    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' })
-    app.use(morgan('combined', {stream: access}))
+    const accesslog = fs.createWriteStream('access.log', { flags: 'a' })
+    app.use(morgan('combined', {stream: accesslog}))
 } else {
     console.log("No log written.")
 }
@@ -75,7 +70,7 @@ if (debug === true) {
     app.get('/app/log/access', (req, res) => {
         res.statusCode = 200;
         res.writeHead(res.statusCode, {"Content-Type" : "text/json"});
-        const stmt = db.prepare('SELECT * FROM access').all();
+        const stmt = db.prepare('SELECT * FROM accesslog').all();
     })
 
     app.get('/app/error', (req, res) => {
