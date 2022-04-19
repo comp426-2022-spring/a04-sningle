@@ -18,7 +18,7 @@ if (row === undefined) {
             time VARCHAR, 
             method VARCHAR, 
             url VARCHAR, 
-            protocol VARCHAR,
+            protocol NUMERIC,
             httpversion NUMERIC, 
             secure VARCHAR, 
             status INTEGER, 
